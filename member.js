@@ -14,48 +14,62 @@ $(function() {
     var MemberList = Backbone.Collection.extend({
         model: Member,
 
-        localStorage: new Backbone.LocalStorage("group-members"),
+        localStorage: new Backbone.LocalStorage("group-members")
 
-        template: $('#member').html()
-   });
+    });
 
     var Members = new MemberList;
 
-    var memberView = Backbone.View.extend({
-        collection: Members,
+    var MemberView = Backbone.View.extend({
+        model: Member,
 
-        el: $('#members-list'),
-
-
+        template: $('#member').html(),
 
         events: {
             'click .remove': 'remove',
             'click .undo': 'undo'
         },
 
-        remove: function() {
-            this.model.remove();
+        remove: function(e) {
+            console.log('hi');
         },
 
         undo: function() {
             
         },
 
+        render: function(m) {
+            var rendered = Handlebars.compile(this.template);
+            this.el = rendered(m.instance);
+            console.log(this.el);
+            return this;
+        },
+        
+        initialize: function() {
+            this.bind('add', this.render, this);
+            this.bind('reset', this.render, this);
+            this.bind('remove', this.render, this);
+        }
+
+    });
+
+    var MembersView = Backbone.View.extend({
+        collection: Members,
+
+        el: $('#members-list'),
+
         render: function() {
             this.collection.each(function(member) {
-                var name = member.attributes.name;
-                var rendered = Handlebars.compile(this.collection.template);
-                $(this.$el).append(rendered(member.attributes));
+                var memberView = new MemberView({model: Member});
+                $(this.el).append(memberView.render({instance: member.attributes}).el);
             }, this);
 
             return this;
         },
 
         initialize: function() {
-            Members.bind('add', this.render, this);
             Members.bind('reset', this.render, this);
-            Members.bind('remove', this.render, this);
-            
+
             if (Members.localStorage.records.length === 0) {
                 $.each(dummyData, function(i, value) {
                     var member = new Member({
@@ -75,7 +89,7 @@ $(function() {
         }
     });
 
-    var App = new memberView;
+    var App = new MembersView;
 });
 
 //global
