@@ -30,7 +30,7 @@ $(function() {
             'click .undo': 'undo'
         },
 
-        remove: function(e) {
+        remove: function() {
             console.log('hi');
         },
 
@@ -40,8 +40,7 @@ $(function() {
 
         render: function(m) {
             var rendered = Handlebars.compile(this.template);
-            this.el = rendered(m.instance);
-            console.log(this.el);
+            $(this.el).html(rendered(m.instance));
             return this;
         },
         
