@@ -1,0 +1,90 @@
+@import "libs/elements.less";
+
+@beige: #E1CB97;
+@yellow: #DB8E20;
+@orange: #F33D1A;
+@stormy: #333746;
+@neonPink: #FF0092;
+
+.container {
+    padding: 15px;
+    margin: 30px auto;
+    width: 900px;
+    background-color: hsla(hue(@beige), saturation(@beige), lightness(@beige), 0.4);
+}
+
+body {
+    font-family: 'Swanky and Moo Moo', cursive;
+    font-size: 150%;
+    background: url('images/bg.jpg');
+    color: @stormy;
+
+    a, a:link, a:visited {
+        color: darken(@orange, 5%);
+        text-decoration: none;
+        padding: 2px 24px 5px 10px;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: hsla(hue(@orange), saturation(@orange), lightness(@orange), 0.2);
+            color: @stormy;
+        }
+    }
+}
+
+h1 {
+    width: 900px;
+    margin: 1em auto;
+    background-color: hsla(hue(@yellow), saturation(@yellow), lightness(@yellow), 0.4);
+    padding: 5px 5px 5px 20px;
+}
+
+.member {
+    .container;
+    .clearfix();
+    position: relative;
+
+    img {
+        .rotation(-5deg);
+        float: right;
+    }
+
+    h2 {
+        font-size: 200%;
+    }
+
+    .joined {
+        background-color: hsla(hue(@yellow), saturation(@yellow), lightness(@yellow), 0.4);
+        clear: right;
+        padding: 3px 35px 4px 5px;
+        float: right;
+        .rotation(13deg);
+    }
+
+    p {
+        padding: .25em 10em .25em 1em;
+        font-size: 110%;
+    }
+
+    .title {
+        background: hsla(hue(@neonPink), saturation(@neonPink), lightness(@neonPink), 0.6);
+        font-weight: bold;
+        position: absolute;
+        right: 10px;
+        z-index: 1;
+        top: 5px;
+        padding: 1px 5px;
+    }
+}
+
+.removed {
+    .container;
+    display: none;
+}
+
+.clearfix() {
+  zoom: 1;
+  &:before { content: ''; display: block; }
+  &:after { content: ''; display: table; clear: both; }
+}
+

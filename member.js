@@ -71,6 +71,7 @@ $(function() {
         },
         
         initialize: function() {
+            this.bind('add', this.render, this);
             this.bind('reset', this.render, this);
         }
 
@@ -105,6 +106,7 @@ $(function() {
 
         initialize: function() {
             Members.bind('reset', this.render, this);
+            Members.bind('sync', this.render, this);
 
             if (Members.localStorage.records.length === 0) {
                 var self = this;
@@ -134,7 +136,7 @@ dummyData = [{
         "id": "2",
         "photo": "images/avatar.png",
         "title": "Co-organizer",
-        "bio": "Jelly-o dessert biscuit sugar plum. Candy canes lollipop topping muffin soufflé cupcake. Pudding I love I love I love candy canes soufflé dragée.",
+        "bio": "Jelly-o dessert biscuit sugar plum. Candy canes lollipop topping muffin soufflé cupcake. Pudding I love I love I love candy cane.",
         "date": "5/21/11"
     },
     {
@@ -148,7 +150,7 @@ dummyData = [{
         "name": "Ebba Blomqvist",
         "id": "4",
         "photo": "images/avatar2.jpg",
-        "bio": "Jelly-o dessert biscuit sugar plum. Candy canes lollipop topping muffin soufflé cupcake. Pudding I love I love I love candy canes soufflé dragée.",
+        "bio": "Jelly-o dessert biscuit sugar plum. Candy canes lollipop topping muffincupcake. Pudding I love I love I love candy canes.",
         "date": "5/21/11"
     },
     {
