@@ -1,8 +1,5 @@
 $(function() {
     
-    // global to quickly hold onto removed members until session ends
-    CACHED = {};
-
     var MemberModel = Backbone.Model.extend({
     });
 
@@ -32,12 +29,11 @@ $(function() {
             // known bug: if all members are removed, app breaks
 
             // get id of the member we're removing
-            var id = $(event.target).attr('id');
+            var id = $(event.target).attr('id'),
+                recordProperty = 'group-members-' + id;
 
             // remove this member from localstorage
-            
-            var record = localStorage.getItem('group-members-' + id);
-            CACHED[id] = record;
+            localStorage.removeItem(recordProperty);
 
             // fake template switch to removed message
             // last minute decision not to break this out to 
@@ -49,8 +45,23 @@ $(function() {
         undo: function() {
             // fetch id of removed member from dom
             var id = this.$el.find('.undo').attr('id');
-
             
+            // find member to recreate
+            // accepts record id and callback data from $.each
+            var evaluateData = function(id) {
+                    return function(i, value) {
+                        if (value.id === id) {
+                            Members.create(value);
+                        }
+                    }
+                };
+            
+            // add this back to the collection
+            $.each(dummyData, evaluateData(id));
+
+            // fake readding the template by unhiding it
+            this.$el.find('.member').show();
+            this.$el.find('.removed').hide();
         },
 
         render: function(m) {
@@ -60,7 +71,6 @@ $(function() {
         },
         
         initialize: function() {
-            this.bind('add', this.render, this);
             this.bind('reset', this.render, this);
         }
 
@@ -80,21 +90,26 @@ $(function() {
             return this;
         },
 
+        addToCollection: function(value) {
+            var member = new MemberModel({
+                name: value.name,
+                id: value.id,
+                photo: value.photo,
+                title: value.title,
+                bio: value.bio,
+                date: value.date
+            });
+
+            Members.create(member);
+        },
+
         initialize: function() {
             Members.bind('reset', this.render, this);
 
             if (Members.localStorage.records.length === 0) {
+                var self = this;
                 $.each(dummyData, function(i, value) {
-                    var member = new MemberModel({
-                        name: value.name,
-                        id: value.id,
-                        photo: value.photo,
-                        title: value.title,
-                        bio: value.bio,
-                        date: value.date
-                    });
-
-                    Members.create(member);
+                    self.addToCollection(value);
                 });
             }
             else {
