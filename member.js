@@ -1,4 +1,8 @@
 $(function() {
+    
+    // global to quickly hold onto removed members until session ends
+    CACHED = {};
+
     var MemberModel = Backbone.Model.extend({
     });
 
@@ -24,17 +28,29 @@ $(function() {
         },
 
         kill: function(event) {
-            // TODO: record removal feels like a hack...
+            // TODO: record removal feels like a hack... so does template split
             // known bug: if all members are removed, app breaks
-            var id = $(event.target).attr('id');
-            var removed = Handlebars.compile($('#removed').html());
 
-            localStorage.removeItem('group-members-' + id);
-            this.$el.replaceWith(removed({id: id}));
+            // get id of the member we're removing
+            var id = $(event.target).attr('id');
+
+            // remove this member from localstorage
+            
+            var record = localStorage.getItem('group-members-' + id);
+            CACHED[id] = record;
+
+            // fake template switch to removed message
+            // last minute decision not to break this out to 
+            // be able to handle undo event in this controller
+            this.$el.find('.member').hide();
+            this.$el.find('.removed').show();
         },
 
         undo: function() {
-            console.log('hi');   
+            // fetch id of removed member from dom
+            var id = this.$el.find('.undo').attr('id');
+
+            
         },
 
         render: function(m) {
