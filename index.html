@@ -4,9 +4,24 @@
     <title>Group list</title>
 </head>
 <body>
-    <div class="member-list">
-        
-    </div>
+    <div id="members-list"></div>
+
+    <script type="text/x-handlebars-template" id="member">
+        <div class="member">
+            {{#if title}}
+                <div class="title">
+                    {{title}}
+                </div>
+            {{/if}}
+
+            <img src="{{photo}}"/>
+            <h2><a href="member/{{id}}">{{name}}</a></h2>
+            <div class="joined">
+                Joined: {{date}}
+            </div>
+            <p>{{bio}}</p>            
+        </div>
+    </script>
 
     <script src="libs/underscore.js"></script>
      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
