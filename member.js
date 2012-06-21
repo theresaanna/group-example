@@ -1,18 +1,11 @@
 $(function() {
-    var Member = Backbone.Model.extend({
-        remove: function() {
-            this.destroy();
-        }
+    var MemberModel = Backbone.Model.extend({
     });
 
-    // this model doesn't offer persistence beyond
-    // the session. removed members are preserved here
-    // so that the user can undo an action during
-    // the current session.
-    var RemovedMember = Backbone.Model.extend({});
+    var Member = new MemberModel;
 
     var MemberList = Backbone.Collection.extend({
-        model: Member,
+        model: MemberModel,
 
         localStorage: new Backbone.LocalStorage("group-members")
 
@@ -21,21 +14,27 @@ $(function() {
     var Members = new MemberList;
 
     var MemberView = Backbone.View.extend({
-        model: Member,
+        collection: Members,
 
         template: $('#member').html(),
 
         events: {
-            'click .remove': 'remove',
+            'click .remove': 'kill',
             'click .undo': 'undo'
         },
 
-        remove: function() {
-            console.log('hi');
+        kill: function(event) {
+            // TODO: record removal feels like a hack...
+            // known bug: if all members are removed, app breaks
+            var id = $(event.target).attr('id');
+            var removed = Handlebars.compile($('#removed').html());
+
+            localStorage.removeItem('group-members-' + id);
+            this.$el.replaceWith(removed({id: id}));
         },
 
         undo: function() {
-            
+            console.log('hi');   
         },
 
         render: function(m) {
@@ -47,7 +46,6 @@ $(function() {
         initialize: function() {
             this.bind('add', this.render, this);
             this.bind('reset', this.render, this);
-            this.bind('remove', this.render, this);
         }
 
     });
@@ -71,12 +69,13 @@ $(function() {
 
             if (Members.localStorage.records.length === 0) {
                 $.each(dummyData, function(i, value) {
-                    var member = new Member({
+                    var member = new MemberModel({
                         name: value.name,
                         id: value.id,
                         photo: value.photo,
                         title: value.title,
-                        bio: value.bio
+                        bio: value.bio,
+                        date: value.date
                     });
 
                     Members.create(member);

@@ -20,8 +20,12 @@
                 Joined: {{date}}
             </div>
             <p>{{bio}}</p> 
-            <a class="remove">REMOVE</a>           
+            <a class="remove" id={{id}}>REMOVE</a>           
         </div>
+    </script>
+
+    <script type="text/x-handlebars-template" id="removed">
+        Member removed. <a class="undo" id="{{id}}">Undo?</a>
     </script>
 
     <script src="libs/underscore.js"></script>
